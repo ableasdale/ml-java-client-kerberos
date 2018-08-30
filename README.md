@@ -23,13 +23,13 @@ default_domain = KERBEROSTEST.LOCAL
 kerberostest.local = KERBEROSTEST.LOCAL
 ```
  
- - Cache the credentials/password: `kinit -V mjones@KERBEROSTEST.LOCAL`
+ - Cache the credentials/password: `kinit -V windowsusername@KERBEROSTEST.LOCAL`
 
  - Confirm credentials has been cached `klist`
 
 ```
 Credentials cache: API:CE48E312-2525-46EF-9DF2-2A80D1AF558C
-        Principal: mjones@KERBEROSTEST.LOCAL
+        Principal: windowsusername@KERBEROSTEST.LOCAL
 
   Issued                Expires               Principal
 Aug 30 13:12:58 2018  Aug 30 23:12:58 2018  krbtgt/KERBEROSTEST.LOCAL@KERBEROSTEST.LOCAL
@@ -42,7 +42,7 @@ Parallel execution is an incubating feature.
 
 > Task :run
 13:23:23.579 [main] INFO ConnectKrb - trying to connect using the Kerberos Auth Context
-13:23:23.641 [main] DEBUG com.marklogic.client.impl.OkHttpServices - Connecting to engrlab-130-217 at 9000 as mjones@KERBEROSTEST.LOCAL
+13:23:23.641 [main] DEBUG com.marklogic.client.impl.OkHttpServices - Connecting to marklogic-hostname at 9000 as windowsusername@KERBEROSTEST.LOCAL
 13:23:23.952 [main] DEBUG com.marklogic.client.impl.OkHttpServices - Posting eval
 13:23:24.714 [main] INFO ConnectKrb - Testing connection (eval 1+1): 2
 

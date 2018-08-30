@@ -7,8 +7,8 @@ import java.lang.invoke.MethodHandles;
 
 public class ConnectKrb {
 
-    private static String appServerHostName = "engrlab-130-217";
-    private static String kdcPrincipalUser = "mjones@KERBEROSTEST.LOCAL";
+    private static String appServerHostName = "marklogic-hostname-to-connect-to";
+    private static String kdcPrincipalUser = "windowsusername@KERBEROSTEST.LOCAL";
     private static int appServerHostPort = 9000;
     private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
