@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+apply plugin: 'application'
+
+mainClassName = 'ConnectKrb'
+group 'ml-java-client-kerberos'
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'com.marklogic', name: 'marklogic-client-api', version: '4.1.0'
+    compile 'com.burgstaller:okhttp-digest:1.17'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+}
