@@ -19,6 +19,6 @@ public class ConnectKrb {
         LOG.info("trying to connect using the Kerberos Auth Context");
         DatabaseClient client = DatabaseClientFactory.newClient(appServerHostName,
                 appServerHostPort, new DatabaseClientFactory.KerberosAuthContext(kdcPrincipalUser));
-        client.newServerEval().xquery("1+1");
+        LOG.info("Test:"+client.newServerEval().xquery("1+1").evalAs(String.class));
     }
 }
