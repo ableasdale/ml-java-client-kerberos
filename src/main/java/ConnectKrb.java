@@ -7,11 +7,9 @@ import java.lang.invoke.MethodHandles;
 
 public class ConnectKrb {
 
-    //
-    // private DatabaseClient client;
     private static String appServerHostName = "engrlab-130-217";
-    private static String kdcPrincipalUser = "mjones@kerberostest.local";
-    private static int appServerHostPort = 9001;
+    private static String kdcPrincipalUser = "mjones@KERBEROSTEST.LOCAL";
+    private static int appServerHostPort = 9000;
     private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static void main(String[] args) {
@@ -19,6 +17,6 @@ public class ConnectKrb {
         LOG.info("trying to connect using the Kerberos Auth Context");
         DatabaseClient client = DatabaseClientFactory.newClient(appServerHostName,
                 appServerHostPort, new DatabaseClientFactory.KerberosAuthContext(kdcPrincipalUser));
-        LOG.info("Test:"+client.newServerEval().xquery("1+1").evalAs(String.class));
+        LOG.info("Testing connection (eval 1+1): "+client.newServerEval().xquery("1+1").evalAs(String.class));
     }
 }
