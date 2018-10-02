@@ -4,7 +4,8 @@ plugins {
 
 apply plugin: 'application'
 
-mainClassName = 'ConnectKrb'
+//mainClassName = 'ConnectKrb'
+mainClassName = 'ConnectKrbSpringRestTemplate'
 group 'ml-java-client-kerberos'
 
 version '1.0-SNAPSHOT'
@@ -21,4 +22,7 @@ dependencies {
     compile group: 'com.marklogic', name: 'marklogic-client-api', version: '4.1.0'
     compile 'com.burgstaller:okhttp-digest:1.17'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+
+    // Spring
+    compile group: 'org.springframework.security.kerberos', name: 'spring-security-kerberos-client', version: '1.0.1.RELEASE'
 }
