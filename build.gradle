@@ -15,6 +15,11 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
     jcenter()
+
+
+    maven {
+        url "http://repository.jspresso.org/maven2/"
+    }
 }
 
 dependencies {
@@ -24,5 +29,8 @@ dependencies {
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
     // Spring
+    compile group: 'org.springframework.security.kerberos', name: 'spring-security-kerberos-core', version: '1.0.1.RELEASE'
     compile group: 'org.springframework.security.kerberos', name: 'spring-security-kerberos-client', version: '1.0.1.RELEASE'
+
+    compile group: 'net.sourceforge.spnego', name: 'spnego', version: '7.0'
 }
