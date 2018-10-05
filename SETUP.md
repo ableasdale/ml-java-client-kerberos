@@ -1,8 +1,11 @@
 # Configuring a Single User for Kerberos authentication with MarkLogic Server
 
+This guide covers a complete walkthrough covering all the parts to configuring Windows Server 2012 with Active Directory, right down to creating a ReST endpoint in MarkLogic Server and configuring Kerberos authentication, mapping a MarkLogic user to a user in Active Directory.
+
 ## Prerequisites
 - A Windows Server (this guide uses Windows Server 2012 R2) which you can RDC into and have Administrator rights.
-- A separate instance running MarkLogic 9 (this guide uses Redhat Enterprise Linux 7 as the Operating System)
+- A separate instance running MarkLogic 9 (this guide uses Redhat Enterprise Linux 7 as the Operating System).  You should also plan to have administrative (su) rights on this machine also.
+- This guide assumes a third machine is being used (a developer's machine) to manage both of the Servers and to set up and run the tests to confirm everything is working as expected.
 
 ## Create a single test user (with Administrator access)
 
@@ -18,7 +21,7 @@
   - Select the **MemberOf** tab and select **Add**
   - In the **Select Groups** dialogue box type in *Administrators* and click on **Check Names** then **OK**
   - Confirm user is now listed as being a member of the Administrators group and ensure Apply is set to save the changes
-  - Test the login to ensure you're able to get back in after
+  - Test the login to ensure you're able to connect to the machine locally (you will use this account to get back into the system after the Active Directory installation has completed).
 
 ![Computer Management](src/main/resources/images/runthrough/2_computer_management.png)
 
@@ -40,43 +43,15 @@
 
 - Open the **Server Manager** using the icon in the task bar.
 - From the **Server Manager** dashboard, select **Add roles and features** (item 2) from the options
-- On the Installation Type screen, select Role-based or features-based and click Next.
-- By default, the current server is selected. Click Next.
-- On the Server Roles screen, select the check box next to Active Directory Domain Services.
-
-
-
-From the task bar, click Open the Server Manager.
-
-Select the yellow notifications icon in the top navigation bar of the Server Manager window.
-
-The Notifications Pane opens and displays a Post-deployment Configuration notification. Click the Promote this server to a domain controller link that appears in the notification.
-
-
-
-From the Deployment Configuration tab, select Radial options > Add a new forest. Enter your root domain name in the Root domain name field and click Next.
-
-Select a Domain and a Forest functional level.
-
-Enter a password for Directory Services Restore Mode (DSRM) in the Password field.
-
-Note: The DSRM password is used when booting the Domain Controller into recovery mode.
-
-Review the warning on the DNS Options tab and select Next.
-
-Confirm or enter a NetBIOS name and click Next.
-
-Specify the locations of the Database, Log files, and SYSVOL folders, then click Next.
-
-Review the configuration options and click Next.
-
-The system checks if all of the necessary prerequisites are installed on the system. If the system passes these checks, click Install.
-
-Note: The server automatically reboots after the installation is complete.
-
-After the server reboots, reconnect to it by using Microsoft Remote Desktop Protocol (RDP).
-
-
+- On the **Before you begin** screen, click **Next**.
+- On the **Select installation Type** screen, select **Role-based or feature-based installation** and click **Next**.
+- On the **Server Selection** screen, the current server should be selected by default. Click **Next**.
+- On the **Server Roles** screen, select the check box next to **Active Directory Domain Services**.  
+  - As soon as you do this, you'll see an additional window (*add features that are required for Active Directory Domain Services*), click on **Add Features** to close the additional Window and **Next**
+- On the **Active Directory Domain Services** screen, click **Next**.
+- On the **Confirm installation selections** screen, check *Restart the destination server automatically if required* and click **Install**
+- A progress indicator should give you visual feedback on the changes being made as the feature is installed
+- Click **Close** when the installation has completed
 
 ![Server Manager Icon](src/main/resources/images/runthrough/10_open_server_manager.png)
 
@@ -86,9 +61,9 @@ After the server reboots, reconnect to it by using Microsoft Remote Desktop Prot
 
 ![Select Feature Based Installation](src/main/resources/images/runthrough/13b_feature_based_installation.png)
 
-![Add Active Directory Domain Services](src/main/resources/images/runthrough/13a_add_active_directory_domain_services.png)
-
 ![Select Server From Pool](src/main/resources/images/runthrough/14_select_server_from_pool.png)
+
+![Add Active Directory Domain Services](src/main/resources/images/runthrough/13a_add_active_directory_domain_services.png)
 
 ![Confirm Active Directory Domain Services is Selected](src/main/resources/images/runthrough/15_confirm_choice_and_next.png)
 
@@ -99,6 +74,27 @@ After the server reboots, reconnect to it by using Microsoft Remote Desktop Prot
 ![Install - Progress Bar](src/main/resources/images/runthrough/18_install_progress_bar.png)
 
 ![Installation Completed - Close](src/main/resources/images/runthrough/19_install_complete_close_wizard.png)
+
+## Promote the server to a domain controller
+
+- Open the **Server Manager** using the icon in the task bar.
+- Click on the yellow notification triangle icon in the top navigation bar of the Server Manager window.
+- The Notifications panel will open and should display a **Post-deployment Configuration notification**. 
+  - Click the **Promote this server to a domain controller** link in that notification.
+  - Doing this will open the **Active Directory Services Configuration Wizard**
+- On the **Deployment Configuration** screen, select the **Add a new forest** radio button
+  - In the **Root domain name** field, specify the domain name for Active Directory.  For this guide, we will use **activedirectory.marklogic.com**
+  - Click **Next**.
+- On the **Domain Controller Options** screen, leave the defaults set unless you have a specific requirement.
+  - Enter a password for Directory Services Restore Mode (DSRM) in the Password field.
+  - Click **Next**.
+- On the **DNS Options** screen, review the warning message click **Next**.
+- On the **Additional Options** screen, review / confirm or enter a *NetBIOS* domain name and click **Next**.
+- On the **Paths** screen, review or change the locations of the Database, Log files, and SYSVOL folders, then click **Next**.
+- On the **Review Options** screen, review the configured settings (note the domain name and the NetBIOS name) and click **Next**.
+- On the **Prerequisites check** screen, review the warnings and click **Install** if the system passes the necessary checks.
+
+**Note:** The server will automatically reboot after the installation has completed.
 
 ![Post Install Notification](src/main/resources/images/runthrough/20_post_install_tasks_notification.png)
 
@@ -123,6 +119,10 @@ After the server reboots, reconnect to it by using Microsoft Remote Desktop Prot
 ![Reboot](src/main/resources/images/runthrough/30_reboot.png)
 
 ## Log back in after reboot
+
+After the server has restarted, reconnect to it using your Microsoft Remote Desktop Protocol (RDP) connection.
+
+Note that you will need to use a combination of the NetBIOS name and the username to log in.  In the case of this example, the user is **ACTIVEDIRECTORY\testuser**
 
 ![Specify new Domain](src/main/resources/images/runthrough/31_login_using_new_domain.png)
 
