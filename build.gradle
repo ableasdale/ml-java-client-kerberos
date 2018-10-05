@@ -25,4 +25,7 @@ dependencies {
 
     // Spring
     compile group: 'org.springframework.security.kerberos', name: 'spring-security-kerberos-client', version: '1.0.1.RELEASE'
+
+    // Kerb4J
+    compile 'com.kerb4j:kerb4j-client:0.0.8'
 }

@@ -1,9 +1,13 @@
+import com.kerb4j.client.SpnegoClient;
+import com.kerb4j.client.SpnegoContext;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.security.kerberos.client.KerberosRestTemplate;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,5 +44,15 @@ public class KerberosConnectionTest {
         KerberosRestTemplate restTemplate =
                 new KerberosRestTemplate(null, "-", loginOptions);
         assertThat(restTemplate.getForEntity(String.format("http://%s:%d/", Configuration.MARKLOGIC_HOST, Configuration.APPSERVER_PORT), String.class).getBody(), containsString("MarkLogic REST Server"));
+    }
+
+    @Test
+    public void testKerb4JMarkLogicConnection() throws Exception {
+        SpnegoClient spnegoClient = SpnegoClient.loginWithTicketCache(Configuration.KDC_PRINCIPAL_USER);
+        URL url = new URL(String.format("http://%s:%d", Configuration.MARKLOGIC_HOST, Configuration.APPSERVER_PORT));
+        SpnegoContext context = spnegoClient.createContext(new URL(String.format("http://%s", Configuration.MARKLOGIC_HOST)));
+        HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+        huc.setRequestProperty("Authorization", context.createTokenAsAuthroizationHeader());
+        assertEquals(200, huc.getResponseCode());
     }
 }
