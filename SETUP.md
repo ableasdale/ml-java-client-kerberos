@@ -335,7 +335,7 @@ xdmp:http-post("http://localhost:8002/LATEST/rest-apis",
 
 After this has executed, you should have a database (KerberosTest) and associated Application Server.
 
-## Set up MarkLogic with External Authentication
+## Set up MarkLogic with External Security
 
 - Go to **Configure** > **Security** > **External Security** and select the **Create** tab on the right-hand side of the page.
 - Enter the following information
@@ -349,17 +349,71 @@ After this has executed, you should have a database (KerberosTest) and associate
 
 ![Create External Security](src/main/resources/images/runthrough/44b_create_external_security.png)
 
-## Test
+## Configure Application Server for External Security
 
-Modify Configuration.java to provide your own values:
+- Go to **Configure** > **Groups** > **Default** > **App Servers** > **KerberosTest** and select the **Configure** tab on the right-hand side of the page.
+- Set authentication to **kerberos-ticket**
+- Set internal security to **false**
+- Select **KerberosTest** from the dropdown for **external securities**
+
+![Configure Application Server](src/main/resources/images/runthrough/45a_configure_application_server.png)
+
+![Configure Application Server](src/main/resources/images/runthrough/45b_application_server_settings.png)
+
+## Configure User to map for External Security
+
+- Go to **Configure** > **Security** > **Users** and select the **Create** tab
+- Enter the following information
+  - TODO
+
+![Configure External User](src/main/resources/images/runthrough/46a_configure_user.png)
+
+![Configure External User](src/main/resources/images/runthrough/46b_configure_user_for_external_security.png)
+
+## Run the tests
+
+- Modify `Configuration.java` to provide your own values:
+  - KDC_PRINCIPAL_USER
 
 ```java
 public class Configuration {
     public static String MARKLOGIC_HOST = "marklogic_hostname";
-    public static String KDC_PRINCIPAL_USER = "kcd_principal_user";
-    public static int APPSERVER_PORT = 0000;
+    public static String KDC_PRINCIPAL_USER = "testuser@ACTIVEDIRECTORY.MARKLOGIC.COM";
+    public static int APPSERVER_PORT = 8003;
 }
 ```
 
-![]()![]()![]()![]()![]()![]()
+- Configure **krb5.conf** or **krb5.ini** on the host where the tests will be run.
+  - Follow the steps under the section **Create krb5.conf on the MarkLogic host**
 
+- Run `kinit` to create a Kerberos ticket
+
+```
+C:\>kinit testuser@ACTIVEDIRECTORY.MARKLOGIC.COM
+Password for testuser@ACTIVEDIRECTORY.MARKLOGIC.COM:
+New ticket is stored in cache file C:\Users\test\krb5cc_test
+```
+
+- Confirm that a Kerberos ticket has been created with `klist`:
+
+```
+C:\>klist
+
+Current LogonId is 0:0x51850
+
+Cached Tickets: (0)
+```
+
+- Run the tests in **gradle** or in your IDE
+
+```
+E:\workspace\ml-java-client-kerberos>gradle test
+
+> Task :compileJava
+
+BUILD SUCCESSFUL in 14s
+4 actionable tasks: 4 executed
+```
+![Test in Gradle](src/main/resources/images/runthrough/47_gradle_test.png)
+
+![Test in IntelliJ](src/main/resources/images/runthrough/48_run_tests.png)
