@@ -151,7 +151,7 @@ After the server reboots, reconnect to it by using Microsoft Remote Desktop Prot
 
 Your test user should now be set up correctly.
 
-## Create the services keytab
+## Set up the Service Principal name and create the services.keytab
 
 [This part is also covered in the MarkLogic Documentation](https://docs.marklogic.com/guide/security/external-auth#id_17860)
 
@@ -160,8 +160,27 @@ We are ready to create the services.keytab which will be copied over to the data
 - The keytab is generated on your Windows host and from there can be copied over to your MarkLogic instance
 - The user being mapped here is the user that was created in the earlier steps (e.g. **testuser**)
 - The Active Directory domain should be specified using upper case characters (e.g. **@ACTIVEDIRECTORY.MARKLOGIC.COM**)
-- You should use an Administrator connection to Powershell to execute this command; right click on the Powershell icon in the task bar (**>_**) and select **Run as Administrator** and then select **Yes** at the **User Account Control** prompt
-- When you're ready, use the **ktpass** command at the prompt to create the **services.keytab** file:
+- You should use an Administrator connection to Powershell to execute these commands; right click on the Powershell icon in the task bar (**>_**) and select **Run as Administrator** and then select **Yes** at the **User Account Control** prompt
+
+- Set the Service Principal Name (SPN) using the `setspn` command
+- The syntax is `setspn -A` [SPN URI] *name_of_user*
+- The URI will be HTTP/marklogic_hostname@YOUR_ACTIVEDIRECTORY_DOMAIN
+
+```
+setspn -A HTTP/marklogic_hostname@YOUR_ACTIVEDIRECTORY_DOMAIN testuser
+```
+
+To test it you can use a call to `setspn -L [username]` - if everything worked as expected, you should see something like the following:
+
+```
+PS C:\Windows\system32> setspn -L testuser
+Registered ServicePrincipalNames for CN=testuser,CN=Users,DC=activedirectory,DC=marklogic,DC=com:
+        HTTP/marklogic_hostname@ACTIVEDIRECTORY.MARKLOGIC.COM
+        HTTP/marklogic_hostname
+PS C:\Windows\system32>
+```
+
+- When you're ready, use the **ktpass** command at the prompt to create the **services.keytab** file (make sure you're not in the **C:\Windows\system32** directory before you do this):
 
 ```
 ktpass /princ HTTP/marklogic_hostname@YOUR_ACTIVEDIRECTORY_DOMAIN /mapuser testuser@YOUR_ACTIVEDIRECTORY_DOMAIN /pass userpassword /out services.keytab
@@ -188,7 +207,11 @@ And you can confirm that the file **services.keytab** has been created by issuin
 
 ![UAC: Confirm Run Powershell as Administrator](src/main/resources/images/runthrough/38_powershell_uac.png)
 
-![ktpass: create services.keytab](src/main/resources/images/runthrough/39_ktpass_create_services_keytab.png)
+![setspn: create user SPN](src/main/resources/images/runthrough/39a_setspn_user.png)
+
+![setspn: test user SPN](src/main/resources/images/runthrough/39b_test_user_spn.png)
+
+![ktpass: create services.keytab](src/main/resources/images/runthrough/39c_ktpass_create_services_keytab.png)
 
 ![Confirm services.keytab has been created](src/main/resources/images/runthrough/40_ls_to_confirm.png)
 
