@@ -308,5 +308,58 @@ Valid starting       Expires              Service principal
         renew until 10/12/2018 08:04:47
 ```
 
+## Create a ReST Application Server
+
+Run the following code in Query Console to create a new ReST Application Server
+
+```xquery
+xquery version "1.0-ml";
+
+xdmp:http-post("http://localhost:8002/LATEST/rest-apis",
+
+<options xmlns="xdmp:http">
+ <authentication method="digest">
+   <username>username</username>
+   <password>password</password>
+ </authentication>
+ <headers>
+   <Content-type>application/xml</Content-type>
+   <Accept>application/xml</Accept>
+ </headers>
+</options>,
+
+<rest-api xmlns="http://marklogic.com/rest-api">
+  <name>KerberosTest</name>
+</rest-api>)
+```
+
+After this has executed, you should have a database (KerberosTest) and associated Application Server.
+
+## Set up MarkLogic with External Authentication
+
+- Go to **Configure** > **Security** > **External Security** and select the **Create** tab on the right-hand side of the page.
+- Enter the following information
+  - external security name : **KerberosTest**
+  - description : **Kerberos External Security Test**
+  - authentication: **kerberos**
+  - authorization: **internal**
+- Save the new settings using the **ok** button
+
+![Create External Security](src/main/resources/images/runthrough/44a_configure_security_ext_sec.png)
+
+![Create External Security](src/main/resources/images/runthrough/44b_create_external_security.png)
+
+## Test
+
+Modify Configuration.java to provide your own values:
+
+```java
+public class Configuration {
+    public static String MARKLOGIC_HOST = "marklogic_hostname";
+    public static String KDC_PRINCIPAL_USER = "kcd_principal_user";
+    public static int APPSERVER_PORT = 0000;
+}
+```
+
 ![]()![]()![]()![]()![]()![]()
 
