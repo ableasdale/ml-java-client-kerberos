@@ -5,7 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 
-public class ConnectKrb {
+/**
+ * Simple example usage for connecting the Java Client API to MarkLogic using Kerberos Authentication
+ */
+public class ConnectJavaClientApiKerberos {
+
     private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static void main(String[] args) {

@@ -13,6 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.invoke.MethodHandles;
 
+/**
+ * Simple example usage for connecting the Spring ReST Template to MarkLogic using (default) Digest Authentication
+ */
 public class SimpleHttpGetUsingSpringRestTemplate {
 
     private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -20,7 +23,7 @@ public class SimpleHttpGetUsingSpringRestTemplate {
     public static void main(String[] args) {
 
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        HttpHost target = new HttpHost("localhost", 8000, "http");
+        HttpHost target = new HttpHost("localhost", 8002, "http");
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
                 new AuthScope(target),
@@ -32,10 +35,9 @@ public class SimpleHttpGetUsingSpringRestTemplate {
         RestTemplate restTemplate = new RestTemplate(factory);
 
         ResponseEntity<String> response
-                = restTemplate.getForEntity(target.toURI() + "/LATEST/documents", String.class);
+                = restTemplate.getForEntity(String.format("%s/manage/LATEST/databases/App-Services/properties", target.toURI()), String.class);
 
         LOG.info("Response code: " + response.getStatusCode());
         LOG.info(response.toString());
-
     }
 }
