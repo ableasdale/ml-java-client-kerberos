@@ -4,11 +4,9 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import java.lang.invoke.MethodHandles;
 
 public class SimpleHttpGetUsingSpringRestTemplate {
+
     private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     public static void main(String[] args) {
 
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
@@ -24,7 +24,7 @@ public class SimpleHttpGetUsingSpringRestTemplate {
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
                 new AuthScope(target),
-                new UsernamePasswordCredentials("q", "q"));
+                new UsernamePasswordCredentials("username", "password"));
 
         CloseableHttpClient client = HttpClients.custom().setDefaultCredentialsProvider(credsProvider)
                 .build();
@@ -32,9 +32,9 @@ public class SimpleHttpGetUsingSpringRestTemplate {
         RestTemplate restTemplate = new RestTemplate(factory);
 
         ResponseEntity<String> response
-                = restTemplate.getForEntity(target.toURI() + "/LATEST/documents?uri=hotel_7562833080260053169", String.class);
+                = restTemplate.getForEntity(target.toURI() + "/LATEST/documents", String.class);
 
-        LOG.info("Response code: "+response.getStatusCode());
+        LOG.info("Response code: " + response.getStatusCode());
         LOG.info(response.toString());
 
     }
