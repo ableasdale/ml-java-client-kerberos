@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
-public class ConnectKerberosTest {
+public class KerberosConnectionTest {
 
     @BeforeClass
     public static void setDebugProperties() {
@@ -27,8 +29,7 @@ public class ConnectKerberosTest {
     public void testKerberosMarkLogicClientApiConnection() {
         DatabaseClient client = DatabaseClientFactory.newClient(Configuration.MARKLOGIC_HOST,
                 Configuration.APPSERVER_PORT, new DatabaseClientFactory.KerberosAuthContext(Configuration.KDC_PRINCIPAL_USER));
-        String test = client.newServerEval().xquery("1+1").evalAs(String.class);
-        assertEquals("2", test);
+        assertEquals("2", client.newServerEval().xquery("1+1").evalAs(String.class));
     }
 
     @Test
@@ -38,11 +39,6 @@ public class ConnectKerberosTest {
 
         KerberosRestTemplate restTemplate =
                 new KerberosRestTemplate(null, Configuration.KDC_PRINCIPAL_USER, loginOptions);
-        restTemplate.getForEntity(String.format("http://%s:%d/", Configuration.MARKLOGIC_HOST, Configuration.APPSERVER_PORT), String.class);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
+        assertThat(restTemplate.getForEntity(String.format("http://%s:%d/", Configuration.MARKLOGIC_HOST, Configuration.APPSERVER_PORT), String.class).getBody(), containsString("MarkLogic REST Server"));
     }
 }
