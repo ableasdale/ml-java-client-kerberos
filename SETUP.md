@@ -226,5 +226,64 @@ To do this, you'll run commands similar to this:
 ![SSH: move keytab and restart MarkLogic](src/main/resources/images/runthrough/43_copy_keytab_into_data_directory_restart.png)
 
 
+## Create krb5.conf on the MarkLogic host
+
+The format of this file is based on the default **/etc/krb5.conf** that ships with Redhat Enterprise Linux 7:
+
+- You will need to replace all instances of **ACTIVEDIRECTORY.MARKLOGIC.COM** with the name of your Active Directory domain
+- The kdc and admin_server fields will contain the hostname for the Windows Server machine 
+- You will need the necessary permissions to write to **/etc/krb5.conf** (sudo)
+- The Windows equivalent is **C:\Windows\krb5.ini**
+
+```
+[logging]
+default = FILE:/var/log/krb5libs.log
+kdc = FILE:/var/log/krb5kdc.log
+admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+default_realm = ACTIVEDIRECTORY.MARKLOGIC.COM
+dns_lookup_realm = true
+dns_lookup_kdc = false
+ticket_lifetime = 24h
+renew_lifetime = 7d
+forwardable = true
+
+[realms]
+ACTIVEDIRECTORY.MARKLOGIC.COM = {
+kdc = hostname-of-your-windows-machine
+admin_server = hostname-of-your-windows-machine
+}
+
+[domain_realm]
+.marklogic.com = ACTIVEDIRECTORY.MARKLOGIC.COM
+marklogic.com = ACTIVEDIRECTORY.MARKLOGIC.COM
+```
+
+## Test the connection on the MarkLogic host
+
+At the prompt (still elevated), you can test the configuration with a call to kinit.  It should return nothing if the test was successful.
+
+The format is:
+
+`kinit` [SPN URI] -t [path to services.keytab]
+
+```
+# kinit HTTP/marklogic-hostname@ACTIVEDIRECTORY.MARKLOGIC.COM -t /var/opt/MarkLogic/services.keytab
+keytab specified, forcing -k
+```
+
+A call to `klist` should confirm that the Kerberos ticket was created successfully using the **services.keytab**:
+
+```
+]# klist
+Ticket cache: FILE:/tmp/krb5cc_0
+Default principal: HTTP/marklogic-hostname@ACTIVEDIRECTORY.MARKLOGIC.COM
+
+Valid starting       Expires              Service principal
+10/05/2018 08:04:47  10/05/2018 18:04:47  krbtgt/ACTIVEDIRECTORY.MARKLOGIC.COM@ACTIVEDIRECTORY.MARKLOGIC.COM
+        renew until 10/12/2018 08:04:47
+```
+
 ![]()![]()![]()![]()![]()![]()
 
