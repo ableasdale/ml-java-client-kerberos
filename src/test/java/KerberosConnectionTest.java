@@ -35,10 +35,10 @@ public class KerberosConnectionTest {
     @Test
     public void testKerberosUsingSpringRestTemplate() {
         Map<String, Object> loginOptions = new HashMap<>();
-        loginOptions.put("debug", "true");
+        //loginOptions.put("debug", "true");
 
         KerberosRestTemplate restTemplate =
-                new KerberosRestTemplate(null, Configuration.KDC_PRINCIPAL_USER, loginOptions);
+                new KerberosRestTemplate(null, "-", loginOptions);
         assertThat(restTemplate.getForEntity(String.format("http://%s:%d/", Configuration.MARKLOGIC_HOST, Configuration.APPSERVER_PORT), String.class).getBody(), containsString("MarkLogic REST Server"));
     }
 }
