@@ -4,10 +4,6 @@
 - A Windows Server (this guide uses Windows Server 2012 R2) which you can RDC into and have Administrator rights.
 - A separate instance running MarkLogic 9 (this guide uses Redhat Enterprise Linux 7 as the Operating System)
 
-Notes:
-(MarkLogic host is: engrlab-130-175.engrlab.marklogic.com)
-(Windows host is: engrlab-129-160.marklogic.com)
-
 ## Create a single test user (with Administrator access)
 
 - Create a Remote Desktop Connection into your Windows Machine and log in.
@@ -132,6 +128,103 @@ After the server reboots, reconnect to it by using Microsoft Remote Desktop Prot
 
 ![Log In Screen](src/main/resources/images/runthrough/32_log_in_as_testuser_on_domain.png)
 
-![]()
+## Configure your test user
 
+- Right click on the Start menu and select Run and then type in **dsa.msc** to open **Active Directory Users and Computers**
+- Expand the Active Directory domain (in this example, it's called **activedirectory.marklogic.com**) and select **Users**
+- Find your *testuser* User, right-click and select **Properties**
+- Select the **Account** tab and enter the following information under the **User login name** heading:
+  - The first input field will contain the **Subject Principal Name** (**SPN**) used to connnect to MarkLogic Server.  The syntax for this will be **HTTP/** (*note the single forward slash*) followed by the Fully Qualified Domain Name (FQDN) of the **MarkLogic host** (this is listed at the top of the page in the Admin GUI on port 8001 in MarkLogic Server or can be determined by typing in hostname in a shell session to the OS running MarkLogic Server). For example **HTTP/marklogic.example.com**
+  - The second input field is a dropdown, use it to select your Active Directory domain (in this example it is **@activedirectory.marklogic.com**)
+  - Together these will create a union connecting the MarkLogic host with the Active Directory domain name (for example: *HTTP/marklogic.example.com@activedirectory.marklogic.com*)
+  - Save these settings using the **Apply** button
+
+![Run "Active Directory Users and Computers" (dsa.msc)](src/main/resources/images/runthrough/33_open_ad_users.png)
+
+![Expand The Domain and View Users](src/main/resources/images/runthrough/34_expand_users.png)
+
+![testuser Properties](src/main/resources/images/runthrough/35_testuser_properties.png)
+
+![Get MarkLogic's FQDN](src/main/resources/images/runthrough/36a_get_marklogic_fqdn_name.png)
+
+![Configure User with SPN](src/main/resources/images/runthrough/36b_configure_user_with_marklogic.png)
+
+Your test user should now be set up correctly.
+
+## Create the services keytab
+
+[This part is also covered in the MarkLogic Documentation](https://docs.marklogic.com/guide/security/external-auth#id_17860)
+
+We are ready to create the services.keytab which will be copied over to the data directory of the MarkLogic host.  Some points to note:
+
+- The keytab is generated on your Windows host and from there can be copied over to your MarkLogic instance
+- The user being mapped here is the user that was created in the earlier steps (e.g. **testuser**)
+- The Active Directory domain should be specified using upper case characters (e.g. **@ACTIVEDIRECTORY.MARKLOGIC.COM**)
+- You should use an Administrator connection to Powershell to execute this command; right click on the Powershell icon in the task bar (**>_**) and select **Run as Administrator** and then select **Yes** at the **User Account Control** prompt
+- When you're ready, use the **ktpass** command at the prompt to create the **services.keytab** file:
+
+```
+ktpass /princ HTTP/marklogic_hostname@YOUR_ACTIVEDIRECTORY_DOMAIN /mapuser testuser@YOUR_ACTIVEDIRECTORY_DOMAIN /pass userpassword /out services.keytab
+``` 
+
+You should see something like this:
+
+```
+PS C:\> ktpass /princ HTTP/marklogic_hostname@ACTIVEDIRECTORY.MARKLOGIC.COM /mapuser testuser@ACTIVEDIRECTORY.MARKLOGIC.COM /pass YOURUSERPASSWORD /out services.keytab
+Targeting domain controller: windows_ad_host.activedirectory.marklogic.com
+Using legacy password setting method
+Successfully mapped HTTP/marklogic_hostname to testuser.
+WARNING: pType and account type do not match. This might cause problems.
+Key created.
+Output keytab to services.keytab:
+Keytab version: 0x502
+keysize 107 HTTP/marklogic_hostname@ACTIVEDIRECTORY.MARKLOGIC.COM ptype 0 (KRB5_NT_UNKNOWN) vno 3 etype 0x17 (RC4-HMAC) keylength 16 (0x077cccc23f8ab7031726a3b70c694a49)
+```
+
+And you can confirm that the file **services.keytab** has been created by issuing the **ls** command at the prompt.
+
+
+![Launch Powershell](src/main/resources/images/runthrough/37_launch_ps_as_administrator.png)
+
+![UAC: Confirm Run Powershell as Administrator](src/main/resources/images/runthrough/38_powershell_uac.png)
+
+![ktpass: create services.keytab](src/main/resources/images/runthrough/39_ktpass_create_services_keytab.png)
+
+![Confirm services.keytab has been created](src/main/resources/images/runthrough/40_ls_to_confirm.png)
+
+## Copy services.keytab over to the host running MarkLogic Server
+
+First, copy the services.keytab over to the MarkLogic instance.  In this example, we're using **Cygwin** and **scp** to copy the file to the /tmp directory on the MarkLogic host:
+
+```
+$ scp /cygdrive/c/services.keytab unixusername@marklogic_hostname:/tmp
+```
+
+![Cygwin: scp file](src/main/resources/images/runthrough/41_scp_services_keytab_to_ml.png)
+
+## Install the keytab on MarkLogic Server
+
+In order to do this, we need to:
+
+- Establish an SSH connection with the MarkLogic instance
+- Elevate user to root (**su**)
+- Stop the MarkLogic process on the host
+- Copy the **services.keytab** file into MarkLogic's data directory
+  - if you're unsure where that is, you can use the `xdmp:data-directory()` builtin in Query Console 
+- Restart MarkLogic Server
+
+To do this, you'll run commands similar to this:
+
+- `ssh username@hostname`
+- `sudo su`
+- `service MarkLogic stop`
+- `mv /tmp/services.keytab /var/opt/MarkLogic/`
+- `service MarkLogic start`
+
+![Output of xdmp:data-directory()](src/main/resources/images/runthrough/42_xdmp_data_directory.png)
+
+![SSH: move keytab and restart MarkLogic](src/main/resources/images/runthrough/43_copy_keytab_into_data_directory_restart.png)
+
+
+![]()![]()![]()![]()![]()![]()
 
