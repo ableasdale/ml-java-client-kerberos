@@ -258,7 +258,7 @@ The format of this file is based on the default **/etc/krb5.conf** that ships wi
 - You will need the necessary permissions to write to **/etc/krb5.conf** (sudo)
 - The Windows equivalent is **C:\Windows\krb5.ini**
 
-```
+```apache_conf
 [logging]
 default = FILE:/var/log/krb5libs.log
 kdc = FILE:/var/log/krb5kdc.log
@@ -310,7 +310,7 @@ Valid starting       Expires              Service principal
 
 ## Create a ReST Application Server
 
-Run the following code in Query Console to create a new ReST Application Server
+Run the following code in Query Console to create a new ReST Application Server:
 
 ```xquery
 xquery version "1.0-ml";
@@ -355,6 +355,7 @@ After this has executed, you should have a database (KerberosTest) and associate
 - Set authentication to **kerberos-ticket**
 - Set internal security to **false**
 - Select **KerberosTest** from the dropdown for **external securities**
+- Save the changes using the **ok** button
 
 ![Configure Application Server](src/main/resources/images/runthrough/45a_configure_application_server.png)
 
@@ -364,7 +365,9 @@ After this has executed, you should have a database (KerberosTest) and associate
 
 - Go to **Configure** > **Security** > **Users** and select the **Create** tab
 - Enter the following information
-  - TODO
+  - user name : **testuser**
+  - external name : **testuser@ACTIVEDIRECTORY.MARKLOGIC.COM**
+- Use any password and note that it doesn't need to match the password used for the Windows testuser.
 
 ![Configure External User](src/main/resources/images/runthrough/46a_configure_user.png)
 
@@ -373,8 +376,9 @@ After this has executed, you should have a database (KerberosTest) and associate
 ## Run the tests
 
 - Modify `Configuration.java` to provide your own values:
-  - KDC_PRINCIPAL_USER
-
+  - **KDC_PRINCIPAL_USER** is the same value you used for the external name when you set up the MarkLogic user (**testuser@ACTIVEDIRECTORY.MARKLOGIC.COM**)
+  - **APPSERVER_PORT** is the port that the **KerberosTest** Application Server used (likely to be **8003** if it's not already taken by another Application Server) 
+  
 ```java
 public class Configuration {
     public static String MARKLOGIC_HOST = "marklogic_hostname";
