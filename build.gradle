@@ -4,8 +4,8 @@ plugins {
 
 apply plugin: 'application'
 
-//mainClassName = 'ConnectKrb'
-mainClassName = 'ConnectKrbSpringRestTemplate'
+mainClassName = 'ConnectJavaClientApiKerberos'
+
 group 'ml-java-client-kerberos'
 
 version '1.0-SNAPSHOT'

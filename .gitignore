@@ -1,6 +1,7 @@
+*.iml
 .gradle
 .idea
 gradle
 out
 build
-src/main/java/Configuration
+src/main/java/Configuration.java

@@ -13,12 +13,18 @@ public class ConnectKerberosTest {
 
     @BeforeClass
     public static void setDebugProperties() {
-        System.setProperty("sun.security.krb5.debug", "true");
-        System.setProperty("sun.security.spnego.debug", "true");
+        // System.setProperty("sun.security.krb5.debug", "true");
+        // System.setProperty("sun.security.spnego.debug", "true");
+        // Use this if you want to use a local krb5.conf file
+        // System.setProperty("java.security.krb5.conf", "/etc/krb5.conf");
+        // Use this if you want to specify Login Config
+        // System.setProperty("java.security.auth.login.config", "login.conf");
+        // System.setProperty("javax.security.auth.useSubjectCredsOnly", "false");
+        // System.setProperty("sun.security.jgss.debug", "true");
     }
 
     @Test
-    public void testMarkLogicClientApiConnection() {
+    public void testKerberosMarkLogicClientApiConnection() {
         DatabaseClient client = DatabaseClientFactory.newClient(Configuration.MARKLOGIC_HOST,
                 Configuration.APPSERVER_PORT, new DatabaseClientFactory.KerberosAuthContext(Configuration.KDC_PRINCIPAL_USER));
         String test = client.newServerEval().xquery("1+1").evalAs(String.class);
@@ -28,19 +34,11 @@ public class ConnectKerberosTest {
     @Test
     public void testKerberosUsingSpringRestTemplate() {
         Map<String, Object> loginOptions = new HashMap<>();
-               loginOptions.put("principal", Configuration.KDC_PRINCIPAL_USER);
-        loginOptions.put("userPrincipal", Configuration.KDC_PRINCIPAL_USER);
-        loginOptions.put("useTicketCache", "true");
-        loginOptions.put("doNotPrompt", "true");
-          loginOptions.put("isInitiator", "true");
-          loginOptions.put("useTicketCache", "true");
-         loginOptions.put("renewTGT", "true");
-         loginOptions.put("refreshKrb5Config", "true");
         loginOptions.put("debug", "true");
 
         KerberosRestTemplate restTemplate =
                 new KerberosRestTemplate(null, Configuration.KDC_PRINCIPAL_USER, loginOptions);
-        restTemplate.getForEntity(String.format("http://%s:%d/manage/LATEST/databases/App-Services/properties", Configuration.MARKLOGIC_HOST, Configuration.APPSERVER_PORT), String.class);
+        restTemplate.getForEntity(String.format("http://%s:%d/", Configuration.MARKLOGIC_HOST, Configuration.APPSERVER_PORT), String.class);
     }
 
     @Override
