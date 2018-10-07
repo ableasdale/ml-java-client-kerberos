@@ -421,3 +421,4 @@ BUILD SUCCESSFUL in 14s
 ![Test in Gradle](src/main/resources/images/runthrough/47_gradle_test.png)
 
 ![Test in IntelliJ](src/main/resources/images/runthrough/48_run_tests.png)
+
