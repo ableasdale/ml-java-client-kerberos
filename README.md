@@ -14,8 +14,10 @@ The three approaches can also be run [within a single test](src/test/java/Kerber
 
 Read these guides for a complete walkthrough covering Active Directory configuration all the way to configuring MarkLogic for testing:
 
-* [Configuring a Single User for Kerberos authentication with MarkLogic Server (Windows Server 2012)](SETUP.md)
-* [Configuring an Active Directory Group for Kerberos authentication and LDAP authorization with MarkLogic Server (Windows Server 2012)](LDAP_SETUP.md)
+* [Configuring a Single User for Kerberos authentication with MarkLogic Server (**Windows Server 2012**)](SETUP.md)
+* [Configuring an Active Directory Group for Kerberos authentication and LDAP authorization with MarkLogic Server (**Windows Server 2012**)](LDAP_SETUP.md)
 
-* [Configuring a Single User for Kerberos authentication with MarkLogic Server (Windows Server 2008)](SETUP_2008.md)
-* [Configuring an Active Directory Group for Kerberos authentication and LDAP authorization with MarkLogic Server (Windows Server 2008)](LDAP_SETUP_2008.md)
+* [Configuring a Single User for Kerberos authentication with MarkLogic Server (**Windows Server 2008**)](SETUP_2008.md)
+* [Configuring an Active Directory Group for Kerberos authentication and LDAP authorization with MarkLogic Server (**Windows Server 2008**)](LDAP_SETUP_2008.md)
+
+* **Coming soon** OpenLDAP walkthrough
