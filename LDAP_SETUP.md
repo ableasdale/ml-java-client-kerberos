@@ -16,9 +16,9 @@ Any users added to this group will be mapped to a corresponding MarkLogic group
 
 ![Run "Active Directory Users and Computers" (dsa.msc)](src/main/resources/images/group-configuration/1_open_ad_users.png)
 
-![Run "Active Directory Users and Computers" (dsa.msc)](src/main/resources/images/group-configuration/2_create_new_group.png)
+![DSA: Create New Group](src/main/resources/images/group-configuration/2_create_new_group.png)
 
-![Run "Active Directory Users and Computers" (dsa.msc)](src/main/resources/images/group-configuration/3_set_group_name.png)
+![DSA: Assgin Grou name to Group](src/main/resources/images/group-configuration/3_set_group_name.png)
 
 ## Add user(s) to your new group
 
@@ -39,28 +39,37 @@ xdmp:ldap-lookup('CN=testuser,CN=Users,DC=activedirectory,DC=marklogic,DC=com',
 )
 ```
 
-![Run "Active Directory Users and Computers" (dsa.msc)](src/main/resources/images/group-configuration/4_configure_user_properties.png)
+![Configure testuser properties](src/main/resources/images/group-configuration/4_configure_user_properties.png)
 
-![Run "Active Directory Users and Computers" (dsa.msc)](src/main/resources/images/group-configuration/5_memberof_add.png)
+![Select Member of tab and click Add](src/main/resources/images/group-configuration/5_memberof_add.png)
 
-![Run "Active Directory Users and Computers" (dsa.msc)](src/main/resources/images/group-configuration/6_confirm_apply.png)
+![Select the MarkLogic group used for the binding](src/main/resources/images/group-configuration/6_confirm_apply.png)
 
-![](src/main/resources/images/group-configuration/7_confirm_testuser_has_searchable_name.png)
+![Confirm Test User (First name and Last name) for LDAP lookup](src/main/resources/images/group-configuration/7_confirm_testuser_has_searchable_name.png)
 
-![](src/main/resources/images/group-configuration/8_xdmp_ldap_lookup.png)
+![Run xdmp:ldap-lookup](src/main/resources/images/group-configuration/8_xdmp_ldap_lookup.png)
 
-![](src/main/resources/images/group-configuration/9_marklogic_role_mapping_to_windows.png)
 
-![](src/main/resources/images/group-configuration/10a_external_sec_before.png)
 
-![](src/main/resources/images/group-configuration/10b_external_sec_after.png)
+### Configure MarkLogic for LDAP authentication
 
-![](src/main/resources/images/group-configuration/11_unmap_user.png)
+![Configure external name for admin role](src/main/resources/images/group-configuration/9_marklogic_role_mapping_to_windows.png)
 
+External Settings before changes have been made:
+
+![External Security settings Before](src/main/resources/images/group-configuration/10a_external_sec_before.png)
+
+External Settings after changes have been made for ldap authorization:
+
+![External Security settings After](src/main/resources/images/group-configuration/10b_external_sec_after.png)
+
+![testuser remove external name binding](src/main/resources/images/group-configuration/11_unmap_user.png)
 
 ### Test
 
-![](src/main/resources/images/group-configuration/12_run_tests.png)
+As before, make sure you still have a valid cached ticket (`kinit` / `klist`) on the host running the tests
+
+![Run tests](src/main/resources/images/group-configuration/12_run_tests.png)
 
 
 ### AccessLogs Before
