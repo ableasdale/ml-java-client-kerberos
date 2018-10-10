@@ -67,7 +67,7 @@ External Settings after changes have been made for ldap authorization:
 
 ### Test
 
-As before, make sure you still have a valid cached ticket (`kinit` / `klist`) on the host running the tests
+As before, make sure you still have a valid cached ticket (`kinit` / `klist`) on the host where you're running the tests
 
 ![Run tests](src/main/resources/images/group-configuration/12_run_tests.png)
 
@@ -102,4 +102,13 @@ External User(testuser@ACTIVEDIRECTORY.MARKLOGIC.COM) is Mapped to Temp User(tes
 
 ## Troubleshooting
 
-Trace event: LDAP Search Detail
+### MarkLogic
+
+MarkLogic Diagnostic Trace event: **LDAP Search Detail**
+
+### Linux (pcap)
+
+Linux debugging:
+```
+sudo tcpdump -s 0 -i eth0 -w mycap.pcap
+```
