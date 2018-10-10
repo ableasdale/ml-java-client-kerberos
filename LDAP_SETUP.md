@@ -2,12 +2,14 @@
 
 This guide follows on from - and relies on - most of the configuration and setup as found in the guide for configuring a Single User for Kerberos authentication with MarkLogic Server.  The additional steps outlined in this guide demonstrate the creation of an Active Directory group and then configuring the necessary mappings for MarkLogic Server.
 
+If you're in any doubt, please review the steps in the previous guide first.
+
 ## Create a Group for LDAP Authorization
 
 Any users added to this group will be mapped to a corresponding MarkLogic group
 
 - Right click on the Start menu and select Run and then type in **dsa.msc** to open **Active Directory Users and Computers**
-- New Group
+           - New Group
 - Give it a name (we will call this **MarkLogic**)
 
 
@@ -46,3 +48,39 @@ xdmp:ldap-lookup('CN=testuser,CN=Users,DC=activedirectory,DC=marklogic,DC=com',
 ![](src/main/resources/images/group-configuration/7_confirm_testuser_has_searchable_name.png)
 
 ![](src/main/resources/images/group-configuration/8_xdmp_ldap_lookup.png)
+
+![](src/main/resources/images/group-configuration/9_marklogic_role_mapping_to_windows.png)
+
+![](src/main/resources/images/group-configuration/10a_external_sec_before.png)
+
+![](src/main/resources/images/group-configuration/10b_external_sec_after.png)
+
+![](src/main/resources/images/group-configuration/11_unmap_user.png)
+
+### Before
+```
+172.31.250.159 - - [08/Oct/2018:09:34:25 -0700] "GET / HTTP/1.1" 401 104 - "Apache-HttpClient/4.3.3 (java 1.5)"
+External User(testuser) is Mapped to User(testuser)
+172.31.250.159 - testuser [08/Oct/2018:09:34:27 -0700] "GET / HTTP/1.1" 200 2103 - "Apache-HttpClient/4.3.3 (java 1.5)"
+External User(testuser) is Mapped to User(testuser)
+172.31.250.159 - testuser [08/Oct/2018:09:34:28 -0700] "GET / HTTP/1.1" 200 2103 - "Java/1.8.0_172"
+External User(testuser) is Mapped to User(testuser)
+172.31.250.159 - testuser [08/Oct/2018:09:34:29 -0700] "POST /v1/eval HTTP/1.1" 200 137 - "okhttp/3.10.0"
+```
+
+### After
+
+```
+172.31.250.158 - - [10/Oct/2018:04:08:38 -0700] "GET / HTTP/1.1" 401 104 - "Apache-HttpClient/4.3.3 (java 1.5)"
+External User(testuser@ACTIVEDIRECTORY.MARKLOGIC.COM) is Mapped to Temp User(testuser@ACTIVEDIRECTORY.MARKLOGIC.COM) with Role(s): admin
+172.31.250.158 - testuser@ACTIVEDIRECTORY.MARKLOGIC.COM [10/Oct/2018:04:08:40 -0700] "GET / HTTP/1.1" 200 2103 - "Apache-HttpClient/4.3.3 (java 1.5)"
+External User(testuser@ACTIVEDIRECTORY.MARKLOGIC.COM) is Mapped to Temp User(testuser@ACTIVEDIRECTORY.MARKLOGIC.COM) with Role(s): admin
+172.31.250.158 - testuser@ACTIVEDIRECTORY.MARKLOGIC.COM [10/Oct/2018:04:08:41 -0700] "GET / HTTP/1.1" 200 2103 - "Java/1.8.0_172"
+External User(testuser@ACTIVEDIRECTORY.MARKLOGIC.COM) is Mapped to Temp User(testuser@ACTIVEDIRECTORY.MARKLOGIC.COM) with Role(s): admin
+172.31.250.158 - testuser@ACTIVEDIRECTORY.MARKLOGIC.COM [10/Oct/2018:04:08:41 -0700] "POST /v1/eval HTTP/1.1" 200 137 - "okhttp/3.10.0"
+```
+
+
+## Troubleshooting
+
+Trace event: LDAP Search Detail
