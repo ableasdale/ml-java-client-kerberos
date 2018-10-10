@@ -1,6 +1,6 @@
 # Configuring an AD Group for Kerberos authentication and LDAP authorization with MarkLogic Server
 
-This guide follows on from - and relies on - most of the configuration and setup as found in the guide for configuring a Single User for Kerberos authentication with MarkLogic Server.  The additional steps outlined in this guide demonstrate the creation of an Active Directory group and then configuring the necessary mappings for MarkLogic Server.
+This guide follows on from - and relies on - most of the configuration and setup as found in the guide for [configuring a Single User for Kerberos authentication with MarkLogic Server](SETUP.md).  The additional steps outlined in this guide demonstrate the creation of an Active Directory group and then configuring the necessary mappings for MarkLogic Server.
 
 If you're in any doubt, please review the steps in the previous guide first.
 
