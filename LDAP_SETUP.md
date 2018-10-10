@@ -57,7 +57,15 @@ xdmp:ldap-lookup('CN=testuser,CN=Users,DC=activedirectory,DC=marklogic,DC=com',
 
 ![](src/main/resources/images/group-configuration/11_unmap_user.png)
 
-### Before
+
+### Test
+
+![](src/main/resources/images/group-configuration/12_run_tests.png)
+
+
+### AccessLogs Before
+
+When the tests ran with the single user mapping configured, you would have seen something like this when the tests were run:
 ```
 172.31.250.159 - - [08/Oct/2018:09:34:25 -0700] "GET / HTTP/1.1" 401 104 - "Apache-HttpClient/4.3.3 (java 1.5)"
 External User(testuser) is Mapped to User(testuser)
@@ -68,7 +76,9 @@ External User(testuser) is Mapped to User(testuser)
 172.31.250.159 - testuser [08/Oct/2018:09:34:29 -0700] "POST /v1/eval HTTP/1.1" 200 137 - "okhttp/3.10.0"
 ```
 
-### After
+### AccessLogs After
+
+With the new mappings in place, you should see messages like this:
 
 ```
 172.31.250.158 - - [10/Oct/2018:04:08:38 -0700] "GET / HTTP/1.1" 401 104 - "Apache-HttpClient/4.3.3 (java 1.5)"
