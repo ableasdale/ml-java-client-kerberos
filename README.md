@@ -21,3 +21,7 @@ Read these guides for a complete walkthrough covering Active Directory configura
 * [Configuring an Active Directory Group for Kerberos authentication and LDAP authorization with MarkLogic Server (**Windows Server 2008**)](LDAP_SETUP_2008.md)
 
 * **Coming soon** OpenLDAP walkthrough
+
+## Further Reading
+
+* [MarkLogic Product Documentation: External Authentication](https://docs.marklogic.com/guide/security/external-auth#id_17860)
