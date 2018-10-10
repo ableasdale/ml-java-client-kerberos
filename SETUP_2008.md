@@ -1,6 +1,6 @@
 # Configuring a Single User for Kerberos authentication with MarkLogic Server
 
-This guide covers a complete walkthrough covering all the parts to configuring Windows Server 2012 with Active Directory, right down to creating a ReST endpoint in MarkLogic Server and configuring Kerberos authentication, mapping a MarkLogic user to a user in Active Directory.
+This guide covers a complete walkthrough covering all the parts to configuring Windows Server 2008 R2 with Active Directory, right down to creating a ReST endpoint in MarkLogic Server and configuring Kerberos authentication, mapping a MarkLogic user to a user in Active Directory.
 
 ## Prerequisites
 - A Windows Server (this guide uses Windows Server 2008 R2) which you can RDC into and have Administrator rights.
@@ -13,9 +13,31 @@ This guide covers a complete walkthrough covering all the parts to configuring W
 - Right click on **Start**, type users and select **Edit local users and groups**
 
 ![RDC Connection](src/main/resources/images/runthrough/1_rdc_connect.png)
+
 ![](src/main/resources/images/runthrough2k8/2_user_management.png)
 
-## TODO - potentially set the DNS server to self
+![](src/main/resources/images/runthrough2k8/3_new_user.png)
+
+![](src/main/resources/images/runthrough2k8/4_user_details.png)
+
+![](src/main/resources/images/runthrough2k8/5_set_properties.png)
+
+![](src/main/resources/images/runthrough2k8/6_memberoftab_add.png)
+
+![](src/main/resources/images/runthrough2k8/7_add_administrator_privs.png)
+
+![](src/main/resources/images/runthrough2k8/8_confirm_apply.png)
+
+## Set the DNS server (to self)
+
+![](src/main/resources/images/runthrough2k8/i_network_connections.png)
+
+![](src/main/resources/images/runthrough2k8/ii_select_network_adaptor.png)
+
+![](src/main/resources/images/runthrough2k8/iii_network_properties.png)
+
+![](src/main/resources/images/runthrough2k8/iv_network_configuration_local.png)
+
 
 See: https://support.rackspace.com/how-to/installing-active-directory-domain-services-on-windows-server-2008-r2-enterprise-64-bit/
 
@@ -34,6 +56,26 @@ Windows Server 2008 can properly install and configure DNS during the AD DS inst
 
 ## Add the Active Directory Domain Services role
    
+![](src/main/resources/images/runthrough2k8/9_open_server_manager.png)
+
+![](src/main/resources/images/runthrough2k8/20_roles.png)
+
+![](src/main/resources/images/runthrough2k8/20_add_roles.png)
+
+![](src/main/resources/images/runthrough2k8/21_add_roles_wizard.png)
+
+![](src/main/resources/images/runthrough2k8/22_confirm_add_features.png)
+
+![](src/main/resources/images/runthrough2k8/23_confirm_ad_services.png)
+
+![](src/main/resources/images/runthrough2k8/24_confirm.png)
+
+![](src/main/resources/images/runthrough2k8/25_confirm_summary.png)
+
+![](src/main/resources/images/runthrough2k8/26_install_progress.png)
+
+![](src/main/resources/images/runthrough2k8/27_install_success.png)
+   
 Adding the Active Directory Domain Services role installs the framework for Windows Server 2008 to become a DC and run AD DS. It does not promote the server to a DC or install AD DS.
    
        In the Server Manager window, select the Roles directory.
@@ -50,7 +92,42 @@ Adding the Active Directory Domain Services role installs the framework for Wind
    
        On the Results page, after the role is successfully added, click Close.
 
+
+
+
 ## Install AD DS
+
+![](src/main/resources/images/runthrough2k8/28_roles_summary.png)
+
+![](src/main/resources/images/runthrough2k8/29_dcpromo_wizard.png)
+
+![](src/main/resources/images/runthrough2k8/30_advanced_mode.png)
+
+![](src/main/resources/images/runthrough2k8/31_confirm_warnings.png)
+
+![](src/main/resources/images/runthrough2k8/32_new_domain_forest.png)
+
+![](src/main/resources/images/runthrough2k8/33_fqdn_set.png)
+
+![](src/main/resources/images/runthrough2k8/34_confirm_netbios_name.png)
+
+![](src/main/resources/images/runthrough2k8/35_forest_functional_level.png)
+
+![](src/main/resources/images/runthrough2k8/36_confirm_dns_server.png)
+
+![](src/main/resources/images/runthrough2k8/37_static_ip.png)
+
+![](src/main/resources/images/runthrough2k8/38_warning_message.png)
+
+![](src/main/resources/images/runthrough2k8/39_specify_locations.png)
+
+![](src/main/resources/images/runthrough2k8/40_password.png)
+
+![](src/main/resources/images/runthrough2k8/41_review_settings.png)
+
+![](src/main/resources/images/runthrough2k8/42_wizard_progress.png)
+
+
 
 Now that you have prepared the server, you can install AD DS (DCPROMO).
 
@@ -111,3 +188,6 @@ Note: If you want the server to restart automatically after the installation is 
 
 16.To log in, perform the following steps:
 
+## Logging back in after rebooting
+
+![](src/main/resources/images/runthrough2k8/43_login_after_reboot.png)
